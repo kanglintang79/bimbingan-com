@@ -14,12 +14,38 @@ Online Class 1-on-1: three Zoom sessions, two hours each, for out-of-town studen
 Registration and further consultation: https://wa.me/6281234558399
 `
 
+const PREVIEW_MESSAGE =
+  'Akari is currently in preview mode. Please contact WhatsApp for full assistance.'
+
+const SYSTEM_PROMPT = `
+You are Akari, the friendly virtual assistant for Bimbingan.com.
+
+${PRODUCT_CONTEXT}
+
+Be warm, clear, concise, and conversational.
+Answer accurately about packages, prices, learning duration, locations, facilities, who the program suits, and how to register.
+Explain that the core program is practical offline private Meta Ads mentoring with one mentor and one student.
+Never invent missing details. Handle objections gently and guide interested users to WhatsApp 081234558399.
+`
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ message: 'Method not allowed' })
-  if (!process.env.ANTHROPIC_API_KEY) return res.status(503).json({ message: 'Akari is currently in preview mode. Please contact WhatsApp for full assistance.' })
+  if (!process.env.ANTHROPIC_API_KEY) return res.status(503).json({ message: PREVIEW_MESSAGE })
 
   const { messages = [], lang = 'id' } = req.body || {}
-  const languageRule = lang === 'en' ? 'Reply in clear, friendly English.' : 'Jawab dalam Bahasa Indonesia yang akrab, santai, dan jelas.'
+  const latestUserMessage = [...messages]
+    .reverse()
+    .find((message) => message?.role === 'user' && typeof message.content === 'string')
+    ?.content.trim()
+
+  if (!latestUserMessage) {
+    return res.status(400).json({ message: 'Please enter a message for Akari.' })
+  }
+
+  const languageRule =
+    lang === 'en'
+      ? 'Reply in clear, friendly English.'
+      : 'Jawab dalam Bahasa Indonesia yang akrab, ramah, dan jelas.'
 
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -30,17 +56,29 @@ export default async function handler(req, res) {
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 500,
-        system: `${PRODUCT_CONTEXT}\nYou are Akari, the friendly virtual assistant for Bimbingan.com.\n${languageRule}\nBe warm, clear, concise, and conversational. Explain the private offline 1-on-1 program, prices, duration, locations, facilities, who it suits, and registration accurately. Handle objections gently, never invent details, and softly guide interested users to WhatsApp 081234558399.`,
-        messages: messages.slice(-8).map(({ role, content }) => ({ role, content })),
+        model: 'claude-haiku-4-5',
+        max_tokens: 700,
+        system: `${SYSTEM_PROMPT}\n${languageRule}`,
+        messages: [{ role: 'user', content: latestUserMessage }],
       }),
     })
-    if (!response.ok) throw new Error(`Anthropic error: ${response.status}`)
+
+    if (!response.ok) {
+      const errorText = await response.text()
+      console.error(`Anthropic API error ${response.status}: ${errorText}`)
+      return res.status(response.status).json({ message: 'Akari is temporarily unavailable. Please try again or contact WhatsApp.' })
+    }
+
     const data = await response.json()
-    return res.status(200).json({ message: data.content?.[0]?.text || 'Please contact us on WhatsApp.' })
+    const message = data.content
+      ?.filter((block) => block.type === 'text')
+      .map((block) => block.text)
+      .join('\n')
+      .trim()
+
+    return res.status(200).json({ message: message || 'Please contact us on WhatsApp.' })
   } catch (error) {
-    console.error(error)
-    return res.status(500).json({ message: 'AI service is temporarily unavailable.' })
+    console.error('Anthropic request failed:', error)
+    return res.status(500).json({ message: 'Akari is temporarily unavailable. Please try again or contact WhatsApp.' })
   }
 }
