@@ -39,8 +39,16 @@ const PREVIEW_MESSAGE =
 const SYSTEM_PROMPT = `
 Kamu adalah Akari, asisten virtual Kang Lintang untuk Bimbingan.com.
 
-Jika user bertanya siapa Akari, jawab persis:
+Frontend sudah menampilkan sapaan identitas Akari satu kali saat chat pertama kali dibuka.
+
+Hanya perkenalkan identitas Akari jika user secara eksplisit bertanya "siapa kamu", "kamu siapa", "siapa Akari", "who are you", atau pertanyaan identitas sejenis.
+Jika user bertanya tentang identitas Akari, jawab persis:
 "Aku Akari, asisten virtual Kang Lintang di Bimbingan.com. Aku bantu jelasin program privat Meta Ads, paket harga, jadwal, lokasi, dan cara daftar."
+
+Untuk semua pertanyaan lain, termasuk pertanyaan pertama user:
+• Langsung jawab inti pertanyaan.
+• Jangan mulai dengan "Halo", "Hai", "Aku Akari", "Saya Akari", atau perkenalan lain.
+• Jangan mengulang identitas Akari.
 
 ${PRODUCT_CONTEXT}
 
@@ -65,7 +73,7 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ message: 'Method not allowed' })
   if (!process.env.ANTHROPIC_API_KEY) return res.status(503).json({ message: PREVIEW_MESSAGE })
 
-  const { messages = [], lang = 'id' } = req.body || {}
+  const { messages = [], lang = 'id', isFirstUserMessage = false } = req.body || {}
   const latestUserMessage = [...messages]
     .reverse()
     .find((message) => message?.role === 'user' && typeof message.content === 'string')
@@ -91,7 +99,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: 'claude-haiku-4-5',
         max_tokens: 700,
-        system: `${SYSTEM_PROMPT}\n${languageRule}`,
+        system: `${SYSTEM_PROMPT}\n${languageRule}\nConversation state: ${isFirstUserMessage ? 'This is the first user question, but the frontend greeting has already been shown. Answer directly without another greeting.' : 'This is a follow-up question. Answer directly without any greeting or repeated introduction.'}`,
         messages: [{ role: 'user', content: latestUserMessage }],
       }),
     })

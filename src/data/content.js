@@ -59,7 +59,7 @@ export const copy = {
     },
     chat: {
       label: 'Akari — Asisten Virtual', title: 'Akari', status: 'Asisten virtual Bimbingan.com',
-      welcome: 'Halo! Saya Akari. Mau tanya program privat, harga paket, lokasi, fasilitas, atau cara daftar?',
+      welcome: 'Halo! Aku Akari, asisten virtual Kang Lintang di Bimbingan.com. Aku bisa bantu jelasin program privat Meta Ads, paket harga, kelas online/offline, dan cara daftar.',
       placeholder: 'Tulis pertanyaan...', send: 'Kirim', whatsapp: 'Lanjut ke WhatsApp',
       fallback: 'Akari sedang dalam mode pratinjau. Silakan hubungi WhatsApp untuk bantuan lengkap.',
       prompts: ['Paket paling cocok untuk pemula?', 'Belajar apa saja?', 'Bagaimana cara daftar?'],
@@ -107,7 +107,7 @@ export const copy = {
     cta: { eyebrow: 'Ready to begin?', title: 'Let’s learn advertising with a clearer system.', text: 'Ask about schedules, locations, or the right package for you directly through WhatsApp.', primary: 'Ask via WhatsApp', secondary: 'Chat with Akari' },
     chat: {
       label: 'Akari — Virtual Assistant', title: 'Akari', status: 'Bimbingan.com virtual assistant',
-      welcome: 'Hi! I am Akari. Ask me about private sessions, packages, duration, locations, facilities, or registration.',
+      welcome: 'Hi! I’m Akari, Kang Lintang’s virtual assistant at Bimbingan.com. I can help explain private Meta Ads sessions, packages, online/offline classes, and registration.',
       placeholder: 'Type a question...', send: 'Send', whatsapp: 'Continue on WhatsApp',
       fallback: 'Akari is currently in preview mode. Please contact WhatsApp for full assistance.',
       prompts: ['Best package for beginners?', 'What will I learn?', 'How do I register?'],

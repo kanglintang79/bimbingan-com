@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { whatsappUrl } from '../data/content'
 
 export default function AiChat({ lang, t }) {
@@ -7,15 +7,22 @@ export default function AiChat({ lang, t }) {
   const [loading, setLoading] = useState(false)
   const [messages, setMessages] = useState([])
 
+  const openChat = useCallback(() => {
+    setOpen(true)
+    setMessages((current) => current.length > 0
+      ? current
+      : [{ role: 'assistant', content: t.chat.welcome }])
+  }, [t.chat.welcome])
+
   useEffect(() => {
-    const showAkari = () => setOpen(true)
-    window.addEventListener('open-akari', showAkari)
-    return () => window.removeEventListener('open-akari', showAkari)
-  }, [])
+    window.addEventListener('open-akari', openChat)
+    return () => window.removeEventListener('open-akari', openChat)
+  }, [openChat])
 
   async function sendMessage(text) {
     const clean = text.trim()
     if (!clean || loading) return
+    const isFirstUserMessage = !messages.some((message) => message.role === 'user')
     const next = [...messages, { role: 'user', content: clean }]
     setMessages(next)
     setInput('')
@@ -25,7 +32,7 @@ export default function AiChat({ lang, t }) {
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: next, lang }),
+        body: JSON.stringify({ messages: next, lang, isFirstUserMessage }),
       })
       const data = await response.json()
       if (!response.ok && !data.message) throw new Error('Chat unavailable')
@@ -44,17 +51,16 @@ export default function AiChat({ lang, t }) {
         <button onClick={() => setOpen(false)} className="grid size-8 place-items-center rounded-full border border-white/10 text-white/60 hover:text-white" aria-label="Close chat">×</button>
       </header>
       <div className="flex-1 space-y-3 overflow-y-auto bg-mint p-4">
-        <Bubble>{t.chat.welcome}</Bubble>
         {messages.map((message, i) => <Bubble key={`${message.role}-${i}`} user={message.role === 'user'}>{message.content}</Bubble>)}
         {loading && <Bubble>•••</Bubble>}
-        {messages.length === 0 && <div className="flex flex-wrap gap-2 pt-2">{t.chat.prompts.map((prompt) => <button key={prompt} onClick={() => sendMessage(prompt)} className="rounded-full border border-line bg-white px-3 py-2 text-left font-mono text-[10px] font-medium leading-4 text-muted hover:border-teal/30 hover:text-teal">{prompt}</button>)}</div>}
+        {!messages.some((message) => message.role === 'user') && <div className="flex flex-wrap gap-2 pt-2">{t.chat.prompts.map((prompt) => <button key={prompt} onClick={() => sendMessage(prompt)} className="rounded-full border border-line bg-white px-3 py-2 text-left font-mono text-[10px] font-medium leading-4 text-muted hover:border-teal/30 hover:text-teal">{prompt}</button>)}</div>}
       </div>
       <form onSubmit={(e) => { e.preventDefault(); sendMessage(input) }} className="border-t border-line bg-white p-3">
         <div className="flex gap-2"><input value={input} onChange={(e) => setInput(e.target.value)} placeholder={t.chat.placeholder} className="min-w-0 flex-1 rounded-full border border-line px-4 text-xs outline-none focus:border-teal" /><button disabled={loading} className="rounded-full bg-ink px-4 py-3 text-[10px] font-semibold text-white hover:bg-teal disabled:opacity-50">{t.chat.send}</button></div>
         <a href={whatsappUrl} target="_blank" rel="noreferrer" className="mt-2 block text-center font-mono text-[9px] font-semibold uppercase tracking-widest text-teal">{t.chat.whatsapp} →</a>
       </form>
     </section>}
-    <button onClick={() => setOpen(!open)} className="group flex items-center gap-2.5 rounded-full border border-white/15 bg-ink p-2 pr-3.5 text-white shadow-[0_14px_34px_rgba(11,15,20,.16)] transition hover:bg-teal">
+    <button onClick={() => open ? setOpen(false) : openChat()} className="group flex items-center gap-2.5 rounded-full border border-white/15 bg-ink p-2 pr-3.5 text-white shadow-[0_14px_34px_rgba(11,15,20,.16)] transition hover:bg-teal">
       <RobotIcon compact /><span className="max-w-[145px] text-left font-mono text-[9px] font-medium leading-4">{t.chat.label}</span>
     </button>
   </div>
