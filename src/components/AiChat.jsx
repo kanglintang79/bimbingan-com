@@ -27,8 +27,8 @@ export default function AiChat({ lang, t }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ messages: next, lang }),
       })
-      if (!response.ok) throw new Error('Chat unavailable')
       const data = await response.json()
+      if (!response.ok && !data.message) throw new Error('Chat unavailable')
       setMessages([...next, { role: 'assistant', content: data.message || t.chat.fallback }])
     } catch {
       setMessages([...next, { role: 'assistant', content: t.chat.fallback }])
@@ -61,9 +61,44 @@ export default function AiChat({ lang, t }) {
 }
 
 function Bubble({ children, user = false }) {
-  return <div className={`max-w-[88%] rounded-2xl px-3.5 py-3 text-xs leading-5 ${user ? 'ml-auto rounded-br-md bg-ink text-white' : 'rounded-bl-md border border-line bg-white text-muted'}`}>{children}</div>
+  return <div className={`min-w-0 max-w-[92%] overflow-hidden rounded-2xl px-3.5 py-3 text-xs leading-5 sm:max-w-[88%] ${user ? 'ml-auto rounded-br-md bg-ink text-white' : 'rounded-bl-md border border-line bg-white text-muted'}`}>
+    {user ? <p className="whitespace-pre-wrap break-words">{children}</p> : <FormattedMessage text={children} />}
+  </div>
 }
 
 function RobotIcon({ compact = false }) {
   return <span className={`grid shrink-0 place-items-center rounded-full border border-white/10 bg-white/10 text-teal ${compact ? 'size-8' : 'size-9'}`}><svg viewBox="0 0 24 24" fill="none" className="size-4" aria-hidden="true"><path d="M12 5V2m-6 8h12a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2Zm-2 5H2m20 0h-2M9 14v1m6-1v1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg></span>
+}
+
+function FormattedMessage({ text }) {
+  const cleanText = String(text)
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g, '$1: $2')
+    .replace(/\*\*([^*]+)\*\*/g, '$1')
+    .replace(/__([^_]+)__/g, '$1')
+    .replace(/`([^`]+)`/g, '$1')
+    .replace(/^#{1,6}\s+/gm, '')
+
+  const paragraphs = cleanText.split(/\n\s*\n/).filter(Boolean)
+
+  return <div className="min-w-0 space-y-3 whitespace-pre-wrap break-words [overflow-wrap:anywhere]">
+    {paragraphs.map((paragraph, index) => <p key={`${paragraph.slice(0, 24)}-${index}`}>
+      {linkify(paragraph)}
+    </p>)}
+  </div>
+}
+
+function linkify(text) {
+  const urlPattern = /(https?:\/\/[^\s]+)/g
+
+  return text.split(urlPattern).map((part, index) => {
+    if (!part.match(/^https?:\/\//)) return part
+
+    const trailing = part.match(/[),.;!?]+$/)?.[0] || ''
+    const url = trailing ? part.slice(0, -trailing.length) : part
+
+    return <span key={`${url}-${index}`}>
+      <a href={url} target="_blank" rel="noreferrer" className="font-medium text-teal underline decoration-teal/35 underline-offset-2 transition hover:decoration-teal">{url}</a>
+      {trailing}
+    </span>
+  })
 }
