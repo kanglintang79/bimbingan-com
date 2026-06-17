@@ -71,7 +71,7 @@ Arah edukasi dan penjualan:
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ message: 'Method not allowed' })
-  if (!process.env.ANTHROPIC_API_KEY) return res.status(503).json({ message: PREVIEW_MESSAGE })
+  if (!process.env.DEEPSEEK_API_KEY) return res.status(503).json({ message: PREVIEW_MESSAGE })
 
   const { messages = [], lang = 'id', isFirstUserMessage = false } = req.body || {}
   const latestUserMessage = [...messages]
@@ -89,37 +89,37 @@ export default async function handler(req, res) {
       : 'Jawab dalam Bahasa Indonesia yang akrab, ramah, dan jelas.'
 
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const akariSystemPrompt = `${SYSTEM_PROMPT}\n${languageRule}\nConversation state: ${isFirstUserMessage ? 'This is the first user question, but the frontend greeting has already been shown. Answer directly without another greeting.' : 'This is a follow-up question. Answer directly without any greeting or repeated introduction.'}`
+
+    const response = await fetch('https://api.deepseek.com/chat/completions', {
       method: 'POST',
       headers: {
-        'content-type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01',
+        Authorization: `Bearer ${process.env.DEEPSEEK_API_KEY}`,
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'claude-haiku-4-5',
+        model: 'deepseek-chat',
+        messages: [
+          { role: 'system', content: akariSystemPrompt },
+          { role: 'user', content: latestUserMessage },
+        ],
         max_tokens: 700,
-        system: `${SYSTEM_PROMPT}\n${languageRule}\nConversation state: ${isFirstUserMessage ? 'This is the first user question, but the frontend greeting has already been shown. Answer directly without another greeting.' : 'This is a follow-up question. Answer directly without any greeting or repeated introduction.'}`,
-        messages: [{ role: 'user', content: latestUserMessage }],
+        temperature: 0.7,
       }),
     })
 
     if (!response.ok) {
       const errorText = await response.text()
-      console.error(`Anthropic API error ${response.status}: ${errorText}`)
-      return res.status(response.status).json({ message: 'Akari is temporarily unavailable. Please try again or contact WhatsApp.' })
+      console.error('DeepSeek API error', response.status, errorText)
+      return res.status(500).json({ message: 'Akari is temporarily unavailable. Please try again or contact WhatsApp.' })
     }
 
     const data = await response.json()
-    const message = data.content
-      ?.filter((block) => block.type === 'text')
-      .map((block) => block.text)
-      .join('\n')
-      .trim()
+    const message = data.choices?.[0]?.message?.content?.trim()
 
     return res.status(200).json({ message: message || 'Please contact us on WhatsApp.' })
   } catch (error) {
-    console.error('Anthropic request failed:', error)
+    console.error('DeepSeek request failed:', error)
     return res.status(500).json({ message: 'Akari is temporarily unavailable. Please try again or contact WhatsApp.' })
   }
 }
