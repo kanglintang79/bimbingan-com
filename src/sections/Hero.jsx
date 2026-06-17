@@ -24,8 +24,8 @@ export default function Hero({ t }) {
         <div className="absolute inset-3 translate-x-5 translate-y-4 rounded-3xl bg-teal/15 blur-xl" />
         <div className="absolute inset-5 translate-x-7 translate-y-5 rounded-3xl bg-ink/10 blur-2xl" />
         <MentorImage className="absolute inset-0" imageClassName="opacity-95">
-          <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-transparent" />
-          <div className="absolute inset-x-0 bottom-0 p-4 text-white"><p className="font-mono text-[7px] uppercase tracking-[.16em] text-white/55">Private mentor / 01</p><p className="mt-1 text-sm font-semibold">Kang Lintang</p></div>
+          <div className="absolute inset-0 z-20 bg-gradient-to-t from-ink/80 via-transparent to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 z-30 p-4 text-white"><p className="font-mono text-[7px] uppercase tracking-[.16em] text-white/55">Private mentor / 01</p><p className="mt-1 text-sm font-semibold">Kang Lintang</p></div>
         </MentorImage>
       </div>
     </div>

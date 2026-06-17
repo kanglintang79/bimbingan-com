@@ -1,5 +1,5 @@
 export const whatsappUrl = 'https://wa.me/6281234558399'
-export const mentorImage = 'https://bimbingan.com/wp-content/uploads/2026/06/WhatsApp-Image-2026-06-14-at-12.23.25.jpeg'
+export const mentorImage = '/kang-lintang-mentor.jpg'
 
 export const copy = {
   id: {
