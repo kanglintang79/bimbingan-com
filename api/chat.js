@@ -71,7 +71,7 @@ Arah edukasi dan penjualan:
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ message: 'Method not allowed' })
-  if (!process.env.DEEPSEEK_API_KEY) return res.status(503).json({ message: PREVIEW_MESSAGE })
+  if (!process.env.DINOIKI_API_KEY) return res.status(503).json({ message: PREVIEW_MESSAGE })
 
   const { messages = [], lang = 'id', isFirstUserMessage = false } = req.body || {}
   const latestUserMessage = [...messages]
@@ -91,14 +91,14 @@ export default async function handler(req, res) {
   try {
     const akariSystemPrompt = `${SYSTEM_PROMPT}\n${languageRule}\nConversation state: ${isFirstUserMessage ? 'This is the first user question, but the frontend greeting has already been shown. Answer directly without another greeting.' : 'This is a follow-up question. Answer directly without any greeting or repeated introduction.'}`
 
-    const response = await fetch('https://api.deepseek.com/chat/completions', {
+    const response = await fetch('https://ai.dinoiki.com/v1/chat/completions', {
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${process.env.DEEPSEEK_API_KEY}`,
+        Authorization: `Bearer ${process.env.DINOIKI_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'deepseek-chat',
+        model: 'google/gemini-3-flash-preview',
         messages: [
           { role: 'system', content: akariSystemPrompt },
           { role: 'user', content: latestUserMessage },
@@ -110,7 +110,7 @@ export default async function handler(req, res) {
 
     if (!response.ok) {
       const errorText = await response.text()
-      console.error('DeepSeek API error', response.status, errorText)
+      console.error('Dinoiki API error', response.status, errorText)
       return res.status(500).json({ message: 'Akari is temporarily unavailable. Please try again or contact WhatsApp.' })
     }
 
@@ -119,7 +119,7 @@ export default async function handler(req, res) {
 
     return res.status(200).json({ message: message || 'Please contact us on WhatsApp.' })
   } catch (error) {
-    console.error('DeepSeek request failed:', error)
+    console.error('Dinoiki request failed:', error)
     return res.status(500).json({ message: 'Akari is temporarily unavailable. Please try again or contact WhatsApp.' })
   }
 }
