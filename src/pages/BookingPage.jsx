@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { ArrowIcon, CheckIcon, Logo } from '../components/ui'
 import { offlineBookings, paymentInfo, whatsappUrl } from '../data/content'
@@ -5,13 +6,25 @@ import { offlineBookings, paymentInfo, whatsappUrl } from '../data/content'
 export default function BookingPage() {
   const { slug } = useParams()
   const booking = offlineBookings[slug]
+  const [copyStatus, setCopyStatus] = useState('')
 
   if (!booking) return <BookingNotFound />
 
   const confirmUrl = `${whatsappUrl}?text=${encodeURIComponent(booking.whatsappMessage)}`
 
+  async function copyAccountNumber() {
+    try {
+      if (!navigator.clipboard?.writeText) return
+      await navigator.clipboard.writeText(paymentInfo.accountNumber)
+      setCopyStatus('Nomor rekening disalin')
+      window.setTimeout(() => setCopyStatus(''), 2200)
+    } catch {
+      setCopyStatus('')
+    }
+  }
+
   return (
-    <main className="min-h-screen bg-white text-ink">
+    <main className="min-h-screen bg-white pb-24 text-ink">
       <div className="page-grid relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(20,184,166,.14),transparent_36%),linear-gradient(to_bottom,rgba(255,255,255,.72),#fff_58%)]" />
         <header className="relative z-10 border-b border-line bg-white/82 backdrop-blur-xl">
@@ -41,11 +54,20 @@ export default function BookingPage() {
             <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.18em] text-muted">Instruksi pembayaran</p>
             <div className="mt-5 space-y-3">
               <PaymentRow label="Bank" value={paymentInfo.bank} />
+              <PaymentRow label="Nomor rekening" value={paymentInfo.accountNumber} featured />
               <PaymentRow label="Atas nama" value={paymentInfo.accountName} />
-              <PaymentRow label="Nomor rekening" value={paymentInfo.accountNumber} />
             </div>
-            <p className="mt-5 border-t border-line pt-5 text-xs leading-6 text-muted">
-              Setelah transfer, kirim konfirmasi melalui WhatsApp. Jangan kirim data sensitif selain bukti pembayaran yang memang diperlukan untuk verifikasi manual.
+            <button type="button" onClick={copyAccountNumber} className="mt-4 inline-flex min-h-10 w-full items-center justify-center rounded-full border border-teal/25 bg-white px-4 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-teal transition hover:bg-teal hover:text-white">
+              Salin Nomor Rekening
+            </button>
+            <div className="min-h-6 pt-2">
+              {copyStatus && <p className="text-center text-xs font-medium text-teal">{copyStatus}</p>}
+            </div>
+            <p className="mt-3 border-t border-line pt-5 text-xs leading-6 text-muted">
+              Pembayaran resmi Bimbingan.com hanya melalui rekening di atas. Selain nomor rekening tersebut bukan resmi milik Bimbingan.com.
+            </p>
+            <p className="mt-3 text-xs leading-6 text-muted">
+              Setelah transfer, kirim bukti pembayaran melalui WhatsApp untuk verifikasi manual.
             </p>
             <a href={confirmUrl} target="_blank" rel="noreferrer" className="group mt-6 inline-flex w-full min-h-12 items-center justify-center gap-2 rounded-full bg-ink px-5 text-xs font-semibold text-white transition hover:bg-teal">
               Konfirmasi Pembayaran ke WhatsApp
@@ -91,10 +113,10 @@ function Metric({ label, value }) {
   </div>
 }
 
-function PaymentRow({ label, value }) {
-  return <div className="flex items-start justify-between gap-4 border border-line bg-mint px-4 py-3">
+function PaymentRow({ label, value, featured = false }) {
+  return <div className={`flex flex-col gap-2 border px-4 py-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4 ${featured ? 'border-teal/25 bg-white' : 'border-line bg-mint'}`}>
     <p className="font-mono text-[8px] uppercase tracking-[0.14em] text-muted">{label}</p>
-    <p className="max-w-[62%] text-right text-sm font-semibold leading-5 text-ink">{value}</p>
+    <p className={`break-words font-semibold leading-5 text-ink sm:max-w-[62%] sm:text-right ${featured ? 'font-mono text-lg tracking-[0.08em] sm:text-xl' : 'text-sm'}`}>{value}</p>
   </div>
 }
 

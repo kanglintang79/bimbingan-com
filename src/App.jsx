@@ -30,7 +30,6 @@ function HomePage({ lang, setLang, t }) {
         <WhatsAppCta t={t} />
       </main>
       <Footer t={t} />
-      <AiChat lang={lang} t={t} />
     </>
   )
 }
@@ -46,6 +45,7 @@ function App() {
         <Route path="/booking/:slug" element={<BookingPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
+      <AiChat lang={lang} t={t} />
     </div>
   )
 }

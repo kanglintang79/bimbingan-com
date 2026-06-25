@@ -143,7 +143,7 @@ export const packages = {
 export const paymentInfo = {
   bank: 'Bank Mandiri',
   accountName: 'Dorpi Mora Lintang',
-  accountNumber: 'Minta nomor rekening resmi via WhatsApp',
+  accountNumber: '1320005196168',
 }
 
 export const offlineBookings = {
@@ -158,7 +158,7 @@ export const offlineBookings = {
     includes: ['Sesi privat satu mentor dan satu peserta', 'Praktek setup dan membaca alur iklan', 'Snack box dan minuman', 'Konsultasi gratis 1 tahun pada jam dan hari kerja'],
     additionalCost: 'Tidak ada kewajiban transport atau hotel untuk mentor.',
     note: 'Cocok untuk pemula yang ingin belajar langsung 1-on-1 di Cimahi.',
-    whatsappMessage: 'Halo Kang Lintang, saya sudah melakukan pembayaran untuk Focus Class Cimahi. Mohon dibantu konfirmasi.',
+    whatsappMessage: 'Halo Kang Lintang, saya sudah melakukan pembayaran untuk Focus Class Cimahi. Mohon dibantu konfirmasi pembayaran saya.',
   },
   'paket-b': {
     code: 'B',
@@ -171,7 +171,7 @@ export const offlineBookings = {
     includes: ['Sesi privat satu mentor dan satu peserta', 'Mentor datang ke tempat peserta', 'Praktek Meta Ads dengan arahan langsung', 'Konsultasi gratis 1 tahun pada jam dan hari kerja'],
     additionalCost: 'Tidak ada kewajiban transport atau hotel selama masih Bandung Raya.',
     note: 'Mentor datang ke tempat peserta untuk sesi belajar yang lebih personal.',
-    whatsappMessage: 'Halo Kang Lintang, saya sudah melakukan pembayaran untuk Home Visit Bandung. Mohon dibantu konfirmasi.',
+    whatsappMessage: 'Halo Kang Lintang, saya sudah melakukan pembayaran untuk Home Visit Bandung. Mohon dibantu konfirmasi pembayaran saya.',
   },
   'paket-c': {
     code: 'C',
@@ -185,7 +185,7 @@ export const offlineBookings = {
     prices: ['Jabodetabek Rp3.500.000', 'Pulau Jawa Rp7.500.000', 'Sumatera Rp10.000.000', 'Kalimantan & Sulawesi Rp15.000.000', 'Bali & Nusa Tenggara Rp19.000.000', 'Papua Rp27.000.000'],
     additionalCost: 'Area Jawa bisa memakai kereta jika memungkinkan. Luar Jawa memakai pesawat. Hotel estimasi bintang 3-4.',
     note: 'Estimasi biaya tambahan tidak mengambil harga realtime dari situs travel. Harga final mengikuti kondisi aktual saat booking.',
-    whatsappMessage: 'Halo Kang Lintang, saya ingin konfirmasi/booking Private Mentor Pro. Lokasi saya di [kota]. Mohon dibantu estimasi biaya dan jadwalnya.',
+    whatsappMessage: 'Halo Kang Lintang, saya ingin booking Private Mentor Pro. Lokasi saya di [kota]. Mohon dibantu estimasi biaya tambahan dan jadwalnya.',
   },
   'paket-d': {
     code: 'D',
@@ -199,6 +199,6 @@ export const offlineBookings = {
     includes: ['Kelas kelompok maksimal 10 orang', 'Materi Meta Ads yang disesuaikan dengan kebutuhan tim', 'Diskusi kasus dan arahan praktis', 'Konsultasi gratis 1 tahun pada jam dan hari kerja'],
     additionalCost: 'Transport dan penginapan menyesuaikan lokasi pelatihan.',
     note: 'Cocok untuk tim bisnis, lembaga, perusahaan, atau komunitas. Estimasi biaya final mengikuti kondisi aktual saat booking.',
-    whatsappMessage: 'Halo Kang Lintang, saya ingin konfirmasi/booking Team Boost Class. Lokasi saya di [kota]. Mohon dibantu estimasi biaya dan jadwalnya.',
+    whatsappMessage: 'Halo Kang Lintang, saya ingin booking Team Boost Class. Lokasi saya di [kota]. Mohon dibantu estimasi biaya tambahan dan jadwalnya.',
   },
 }
