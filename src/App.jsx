@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Route, Routes } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import AiChat from './components/AiChat'
 import Hero from './sections/Hero'
@@ -11,13 +12,12 @@ import Mentor from './sections/Mentor'
 import WhatsAppCta from './sections/WhatsAppCta'
 import Footer from './sections/Footer'
 import { copy } from './data/content'
+import BookingPage from './pages/BookingPage'
+import NotFoundPage from './pages/NotFoundPage'
 
-function App() {
-  const [lang, setLang] = useState('en')
-  const t = copy[lang]
-
+function HomePage({ lang, setLang, t }) {
   return (
-    <div className="overflow-hidden bg-white text-ink">
+    <>
       <Navbar lang={lang} setLang={setLang} t={t} />
       <main>
         <Hero t={t} />
@@ -31,6 +31,21 @@ function App() {
       </main>
       <Footer t={t} />
       <AiChat lang={lang} t={t} />
+    </>
+  )
+}
+
+function App() {
+  const [lang, setLang] = useState('en')
+  const t = copy[lang]
+
+  return (
+    <div className="min-h-screen overflow-hidden bg-white text-ink">
+      <Routes>
+        <Route path="/" element={<HomePage lang={lang} setLang={setLang} t={t} />} />
+        <Route path="/booking/:slug" element={<BookingPage />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
     </div>
   )
 }

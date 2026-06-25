@@ -1,4 +1,5 @@
 export const whatsappUrl = 'https://wa.me/6281234558399'
+export const onlineClassUrl = 'https://affiliateku-com.myscalev.com/kelas-meta-ads'
 export const mentorImage = '/kang-lintang-mentor.jpg'
 
 export const copy = {
@@ -36,7 +37,7 @@ export const copy = {
       eyebrow: 'Pilih cara belajarnya',
       title: 'Privat yang menyesuaikan lokasi Anda.',
       text: 'Semua paket dirancang agar peserta bisa bertanya leluasa dan mendapat arahan yang spesifik.',
-      consult: 'Konsultasi Dulu', choose: 'Pilih Paket', area: 'Rincian area & harga',
+      consult: 'Konsultasi Dulu', choose: 'Ambil Paket', area: 'Rincian area & harga',
     },
     private: {
       eyebrow: 'Private by design',
@@ -137,4 +138,67 @@ export const packages = {
     { code: 'D', name: 'Team Boost Class', price: 'Custom price', tag: 'For teams', details: ['5–6 hour session', 'Group class for up to 10 people', 'For business teams, institutions, or companies', 'Free consultation for one year during work hours'] },
     { code: 'ON', name: 'Online Class 1-on-1', price: 'Ask for price', tag: 'Via Zoom', details: ['3 Zoom sessions @ 2 hours', 'Private 1-on-1 Meta Ads via Zoom', 'For out-of-town students who prefer online learning'] },
   ],
+}
+
+export const paymentInfo = {
+  bank: 'Bank Mandiri',
+  accountName: 'Dorpi Mora Lintang',
+  accountNumber: 'Minta nomor rekening resmi via WhatsApp',
+}
+
+export const offlineBookings = {
+  'paket-a': {
+    code: 'A',
+    name: 'Focus Class Cimahi',
+    price: 'Rp899.000',
+    duration: '5-6 jam',
+    location: 'Kantor Cimahi',
+    accommodation: 'Tidak wajib karena peserta datang ke Cimahi.',
+    idealFor: ['Pemula yang ingin belajar langsung 1-on-1', 'Owner bisnis yang ingin memahami Meta Ads dari dasar', 'Peserta yang ingin suasana belajar fokus dan privat'],
+    includes: ['Sesi privat satu mentor dan satu peserta', 'Praktek setup dan membaca alur iklan', 'Snack box dan minuman', 'Konsultasi gratis 1 tahun pada jam dan hari kerja'],
+    additionalCost: 'Tidak ada kewajiban transport atau hotel untuk mentor.',
+    note: 'Cocok untuk pemula yang ingin belajar langsung 1-on-1 di Cimahi.',
+    whatsappMessage: 'Halo Kang Lintang, saya sudah melakukan pembayaran untuk Focus Class Cimahi. Mohon dibantu konfirmasi.',
+  },
+  'paket-b': {
+    code: 'B',
+    name: 'Home Visit Bandung',
+    price: 'Rp1.500.000',
+    duration: '5-6 jam',
+    location: 'Area Bandung Raya',
+    accommodation: 'Tidak wajib selama lokasi masih di area Bandung Raya.',
+    idealFor: ['Peserta di Bandung Raya yang ingin mentor datang ke lokasi', 'Owner bisnis yang ingin belajar memakai konteks bisnis sendiri', 'Peserta yang ingin belajar privat tanpa datang ke kantor'],
+    includes: ['Sesi privat satu mentor dan satu peserta', 'Mentor datang ke tempat peserta', 'Praktek Meta Ads dengan arahan langsung', 'Konsultasi gratis 1 tahun pada jam dan hari kerja'],
+    additionalCost: 'Tidak ada kewajiban transport atau hotel selama masih Bandung Raya.',
+    note: 'Mentor datang ke tempat peserta untuk sesi belajar yang lebih personal.',
+    whatsappMessage: 'Halo Kang Lintang, saya sudah melakukan pembayaran untuk Home Visit Bandung. Mohon dibantu konfirmasi.',
+  },
+  'paket-c': {
+    code: 'C',
+    name: 'Private Mentor Pro',
+    price: 'Mulai Rp3.500.000',
+    duration: '5-6 jam',
+    location: 'Luar Bandung Raya',
+    accommodation: 'Tiket pulang pergi dan hotel ditanggung peserta.',
+    idealFor: ['Peserta luar Bandung Raya yang membutuhkan pendampingan langsung', 'Bisnis yang ingin sesi privat di lokasi sendiri', 'Peserta yang ingin membedah kasus iklan secara intensif'],
+    includes: ['Sesi privat intensif di lokasi peserta', 'Pendampingan alur Meta Ads dari setup sampai membaca data', 'Arahan praktis sesuai kebutuhan bisnis', 'Konsultasi gratis 1 tahun pada jam dan hari kerja'],
+    prices: ['Jabodetabek Rp3.500.000', 'Pulau Jawa Rp7.500.000', 'Sumatera Rp10.000.000', 'Kalimantan & Sulawesi Rp15.000.000', 'Bali & Nusa Tenggara Rp19.000.000', 'Papua Rp27.000.000'],
+    additionalCost: 'Area Jawa bisa memakai kereta jika memungkinkan. Luar Jawa memakai pesawat. Hotel estimasi bintang 3-4.',
+    note: 'Estimasi biaya tambahan tidak mengambil harga realtime dari situs travel. Harga final mengikuti kondisi aktual saat booking.',
+    whatsappMessage: 'Halo Kang Lintang, saya ingin konfirmasi/booking Private Mentor Pro. Lokasi saya di [kota]. Mohon dibantu estimasi biaya dan jadwalnya.',
+  },
+  'paket-d': {
+    code: 'D',
+    name: 'Team Boost Class',
+    price: 'Nego',
+    duration: '5-6 jam',
+    location: 'Menyesuaikan lokasi tim',
+    participants: 'Maksimal 10 orang',
+    accommodation: 'Menyesuaikan lokasi.',
+    idealFor: ['Tim bisnis yang ingin menyamakan fondasi Meta Ads', 'Lembaga, perusahaan, atau komunitas', 'Kelompok kecil yang butuh sesi praktis dan terarah'],
+    includes: ['Kelas kelompok maksimal 10 orang', 'Materi Meta Ads yang disesuaikan dengan kebutuhan tim', 'Diskusi kasus dan arahan praktis', 'Konsultasi gratis 1 tahun pada jam dan hari kerja'],
+    additionalCost: 'Transport dan penginapan menyesuaikan lokasi pelatihan.',
+    note: 'Cocok untuk tim bisnis, lembaga, perusahaan, atau komunitas. Estimasi biaya final mengikuti kondisi aktual saat booking.',
+    whatsappMessage: 'Halo Kang Lintang, saya ingin konfirmasi/booking Team Boost Class. Lokasi saya di [kota]. Mohon dibantu estimasi biaya dan jadwalnya.',
+  },
 }

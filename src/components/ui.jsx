@@ -1,5 +1,5 @@
 export function Logo({ light = false }) {
-  return <a href="#" className={`flex shrink-0 items-center gap-2.5 font-display font-semibold tracking-[-0.04em] ${light ? 'text-white' : 'text-ink'}`}>
+  return <a href="/" className={`flex shrink-0 items-center gap-2.5 font-display font-semibold tracking-[-0.04em] ${light ? 'text-white' : 'text-ink'}`}>
     <span className={`grid size-8 place-items-center rounded-full border ${light ? 'border-white/20' : 'border-ink/10'}`}><span className="size-2 rounded-full bg-teal shadow-[0_0_14px_3px_rgba(20,184,166,.2)]" /></span>
     <span className="text-base sm:text-lg">bimbingan<span className="text-teal">.com</span></span>
   </a>
