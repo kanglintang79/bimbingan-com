@@ -46,6 +46,7 @@ export function trackPageView() {
 export function trackPurchase(params) {
   if (typeof window === 'undefined' || typeof window.fbq !== 'function') return
 
+  console.log('[MetaPixel] Purchase fired', params)
   window.fbq('track', 'Purchase', {
     value: params.value,
     currency: 'IDR',
@@ -60,6 +61,7 @@ export function trackPurchase(params) {
 export function trackLead(params) {
   if (typeof window === 'undefined' || typeof window.fbq !== 'function') return
 
+  console.log('[MetaPixel] Lead fired', params)
   window.fbq('track', 'Lead', {
     content_name: params.content_name,
     content_category: 'Private Meta Ads Mentoring',

@@ -43,7 +43,7 @@ export default function BookingPage() {
     setIsRedirecting(true)
     window.setTimeout(() => {
       window.location.href = confirmUrl
-    }, 1000)
+    }, 2500)
   }
 
   async function copyAccountNumber() {
@@ -125,9 +125,14 @@ export default function BookingPage() {
               </label>
             )}
             <button type="button" onClick={confirmPayment} disabled={isRedirecting} className="group mt-6 inline-flex w-full min-h-12 items-center justify-center gap-2 rounded-full bg-ink px-5 text-xs font-semibold text-white transition hover:bg-teal disabled:cursor-wait disabled:opacity-60 disabled:hover:bg-ink">
-              Konfirmasi Pembayaran ke WhatsApp
-              <ArrowIcon className="size-4 transition group-hover:translate-x-1" />
+              {isRedirecting ? 'Mencatat konfirmasi...' : 'Konfirmasi Pembayaran ke WhatsApp'}
+              {!isRedirecting && <ArrowIcon className="size-4 transition group-hover:translate-x-1" />}
             </button>
+            {isRedirecting && (
+              <p className="mt-2 text-center text-xs leading-5 text-muted">
+                Sebentar, kami sedang mencatat event konfirmasi sebelum mengarahkan ke WhatsApp.
+              </p>
+            )}
             <Link to="/" className="mt-3 inline-flex w-full min-h-12 items-center justify-center rounded-full border border-line px-5 text-xs font-semibold text-ink transition hover:border-teal/35 hover:text-teal">
               Kembali ke halaman utama
             </Link>
