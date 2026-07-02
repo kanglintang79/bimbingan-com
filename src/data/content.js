@@ -159,6 +159,8 @@ export const offlineBookings = {
     additionalCost: 'Tidak ada kewajiban transport atau hotel untuk mentor.',
     note: 'Cocok untuk pemula yang ingin belajar langsung 1-on-1 di Cimahi.',
     whatsappMessage: 'Halo Kang Lintang, saya sudah melakukan pembayaran untuk Focus Class Cimahi. Mohon dibantu konfirmasi pembayaran saya.',
+    trackingName: 'Paket A — Focus Class Cimahi',
+    trackingValue: 899000,
   },
   'paket-b': {
     code: 'B',
@@ -172,6 +174,8 @@ export const offlineBookings = {
     additionalCost: 'Tidak ada kewajiban transport atau hotel selama masih Bandung Raya.',
     note: 'Mentor datang ke tempat peserta untuk sesi belajar yang lebih personal.',
     whatsappMessage: 'Halo Kang Lintang, saya sudah melakukan pembayaran untuk Home Visit Bandung. Mohon dibantu konfirmasi pembayaran saya.',
+    trackingName: 'Paket B — Home Visit Bandung',
+    trackingValue: 1500000,
   },
   'paket-c': {
     code: 'C',
@@ -186,6 +190,15 @@ export const offlineBookings = {
     additionalCost: 'Area Jawa bisa memakai kereta jika memungkinkan. Luar Jawa memakai pesawat. Hotel estimasi bintang 3-4.',
     note: 'Estimasi biaya tambahan tidak mengambil harga realtime dari situs travel. Harga final mengikuti kondisi aktual saat booking.',
     whatsappMessage: 'Halo Kang Lintang, saya ingin booking Private Mentor Pro. Lokasi saya di [kota]. Mohon dibantu estimasi biaya tambahan dan jadwalnya.',
+    trackingName: 'Paket C — Private Mentor Pro',
+    regions: [
+      { name: 'Jabodetabek', value: 3500000 },
+      { name: 'Pulau Jawa', value: 7500000 },
+      { name: 'Sumatera', value: 10000000 },
+      { name: 'Kalimantan & Sulawesi', value: 15000000 },
+      { name: 'Bali & Nusa Tenggara', value: 19000000 },
+      { name: 'Papua', value: 27000000 },
+    ],
   },
   'paket-d': {
     code: 'D',
@@ -200,5 +213,6 @@ export const offlineBookings = {
     additionalCost: 'Transport dan penginapan menyesuaikan lokasi pelatihan.',
     note: 'Cocok untuk tim bisnis, lembaga, perusahaan, atau komunitas. Estimasi biaya final mengikuti kondisi aktual saat booking.',
     whatsappMessage: 'Halo Kang Lintang, saya ingin booking Team Boost Class. Lokasi saya di [kota]. Mohon dibantu estimasi biaya tambahan dan jadwalnya.',
+    trackingName: 'Paket D — Team Boost Class',
   },
 }

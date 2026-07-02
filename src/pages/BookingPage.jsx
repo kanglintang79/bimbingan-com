@@ -2,15 +2,48 @@ import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { ArrowIcon, CheckIcon, Logo } from '../components/ui'
 import { offlineBookings, paymentInfo, whatsappUrl } from '../data/content'
+import { trackLead, trackPurchase } from '../lib/metaPixel'
+
+const TRACKING_CATEGORY = 'Private Meta Ads Mentoring'
 
 export default function BookingPage() {
   const { slug } = useParams()
   const booking = offlineBookings[slug]
   const [copyStatus, setCopyStatus] = useState('')
+  const [selectedRegion, setSelectedRegion] = useState('')
 
   if (!booking) return <BookingNotFound />
 
   const confirmUrl = `${whatsappUrl}?text=${encodeURIComponent(booking.whatsappMessage)}`
+
+  function confirmPayment() {
+    const commonParams = {
+      content_name: booking.trackingName,
+      content_category: TRACKING_CATEGORY,
+      content_type: 'service',
+    }
+
+    if (slug === 'paket-d') {
+      trackLead(commonParams)
+    } else {
+      const region = booking.regions?.find((item) => item.name === selectedRegion)
+      const value = region?.value ?? booking.trackingValue
+
+      if (!value) return
+
+      trackPurchase({
+        ...commonParams,
+        value,
+        currency: 'IDR',
+        contents: [{ id: slug, quantity: 1, item_price: value }],
+        ...(region ? { region: region.name } : {}),
+      })
+    }
+
+    window.setTimeout(() => {
+      window.location.href = confirmUrl
+    }, 300)
+  }
 
   async function copyAccountNumber() {
     try {
@@ -69,10 +102,27 @@ export default function BookingPage() {
             <p className="mt-3 text-xs leading-6 text-muted">
               Setelah transfer, kirim bukti pembayaran melalui WhatsApp untuk verifikasi manual.
             </p>
-            <a href={confirmUrl} target="_blank" rel="noreferrer" className="group mt-6 inline-flex w-full min-h-12 items-center justify-center gap-2 rounded-full bg-ink px-5 text-xs font-semibold text-white transition hover:bg-teal">
+            {booking.regions && (
+              <label className="mt-5 block text-xs font-semibold text-ink">
+                Pilih area peserta
+                <select
+                  value={selectedRegion}
+                  onChange={(event) => setSelectedRegion(event.target.value)}
+                  className="mt-2 min-h-12 w-full border border-line bg-white px-3 text-sm text-ink outline-none transition focus:border-teal"
+                >
+                  <option value="">Pilih area sebelum konfirmasi</option>
+                  {booking.regions.map((region) => (
+                    <option key={region.name} value={region.name}>
+                      {region.name} — Rp{region.value.toLocaleString('id-ID')}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            )}
+            <button type="button" onClick={confirmPayment} disabled={Boolean(booking.regions && !selectedRegion)} className="group mt-6 inline-flex w-full min-h-12 items-center justify-center gap-2 rounded-full bg-ink px-5 text-xs font-semibold text-white transition hover:bg-teal disabled:cursor-not-allowed disabled:opacity-45 disabled:hover:bg-ink">
               Konfirmasi Pembayaran ke WhatsApp
               <ArrowIcon className="size-4 transition group-hover:translate-x-1" />
-            </a>
+            </button>
             <Link to="/" className="mt-3 inline-flex w-full min-h-12 items-center justify-center rounded-full border border-line px-5 text-xs font-semibold text-ink transition hover:border-teal/35 hover:text-teal">
               Kembali ke halaman utama
             </Link>

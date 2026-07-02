@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Route, Routes } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
+import { Route, Routes, useLocation } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import AiChat from './components/AiChat'
 import Hero from './sections/Hero'
@@ -14,6 +14,7 @@ import Footer from './sections/Footer'
 import { copy } from './data/content'
 import BookingPage from './pages/BookingPage'
 import NotFoundPage from './pages/NotFoundPage'
+import { initMetaPixel, trackPageView } from './lib/metaPixel'
 
 function HomePage({ lang, setLang, t }) {
   return (
@@ -37,6 +38,17 @@ function HomePage({ lang, setLang, t }) {
 function App() {
   const [lang, setLang] = useState('en')
   const t = copy[lang]
+  const location = useLocation()
+  const lastTrackedLocation = useRef('')
+
+  useEffect(() => {
+    const locationKey = `${location.pathname}${location.search}`
+    if (lastTrackedLocation.current === locationKey) return
+
+    initMetaPixel()
+    trackPageView()
+    lastTrackedLocation.current = locationKey
+  }, [location.pathname, location.search])
 
   return (
     <div className="min-h-screen overflow-hidden bg-white text-ink">
