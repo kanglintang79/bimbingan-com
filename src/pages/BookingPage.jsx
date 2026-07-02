@@ -4,45 +4,46 @@ import { ArrowIcon, CheckIcon, Logo } from '../components/ui'
 import { offlineBookings, paymentInfo, whatsappUrl } from '../data/content'
 import { trackLead, trackPurchase } from '../lib/metaPixel'
 
-const TRACKING_CATEGORY = 'Private Meta Ads Mentoring'
-
 export default function BookingPage() {
   const { slug } = useParams()
   const booking = offlineBookings[slug]
   const [copyStatus, setCopyStatus] = useState('')
   const [selectedRegion, setSelectedRegion] = useState('')
+  const [regionError, setRegionError] = useState('')
+  const [isRedirecting, setIsRedirecting] = useState(false)
 
   if (!booking) return <BookingNotFound />
 
   const confirmUrl = `${whatsappUrl}?text=${encodeURIComponent(booking.whatsappMessage)}`
 
   function confirmPayment() {
-    const commonParams = {
-      content_name: booking.trackingName,
-      content_category: TRACKING_CATEGORY,
-      content_type: 'service',
+    if (isRedirecting) return
+
+    const region = booking.regions?.find((item) => item.name === selectedRegion)
+    if (booking.regions && !region) {
+      setRegionError('Pilih area terlebih dahulu agar estimasi paket bisa dihitung.')
+      return
     }
 
     if (slug === 'paket-d') {
-      trackLead(commonParams)
+      trackLead({ content_name: booking.trackingName })
     } else {
-      const region = booking.regions?.find((item) => item.name === selectedRegion)
       const value = region?.value ?? booking.trackingValue
 
       if (!value) return
 
       trackPurchase({
-        ...commonParams,
         value,
-        currency: 'IDR',
-        contents: [{ id: slug, quantity: 1, item_price: value }],
+        id: slug,
+        content_name: booking.trackingName,
         ...(region ? { region: region.name } : {}),
       })
     }
 
+    setIsRedirecting(true)
     window.setTimeout(() => {
       window.location.href = confirmUrl
-    }, 300)
+    }, 1000)
   }
 
   async function copyAccountNumber() {
@@ -107,7 +108,10 @@ export default function BookingPage() {
                 Pilih area peserta
                 <select
                   value={selectedRegion}
-                  onChange={(event) => setSelectedRegion(event.target.value)}
+                  onChange={(event) => {
+                    setSelectedRegion(event.target.value)
+                    setRegionError('')
+                  }}
                   className="mt-2 min-h-12 w-full border border-line bg-white px-3 text-sm text-ink outline-none transition focus:border-teal"
                 >
                   <option value="">Pilih area sebelum konfirmasi</option>
@@ -117,9 +121,10 @@ export default function BookingPage() {
                     </option>
                   ))}
                 </select>
+                {regionError && <span className="mt-2 block font-normal leading-5 text-red-600">{regionError}</span>}
               </label>
             )}
-            <button type="button" onClick={confirmPayment} disabled={Boolean(booking.regions && !selectedRegion)} className="group mt-6 inline-flex w-full min-h-12 items-center justify-center gap-2 rounded-full bg-ink px-5 text-xs font-semibold text-white transition hover:bg-teal disabled:cursor-not-allowed disabled:opacity-45 disabled:hover:bg-ink">
+            <button type="button" onClick={confirmPayment} disabled={isRedirecting} className="group mt-6 inline-flex w-full min-h-12 items-center justify-center gap-2 rounded-full bg-ink px-5 text-xs font-semibold text-white transition hover:bg-teal disabled:cursor-wait disabled:opacity-60 disabled:hover:bg-ink">
               Konfirmasi Pembayaran ke WhatsApp
               <ArrowIcon className="size-4 transition group-hover:translate-x-1" />
             </button>

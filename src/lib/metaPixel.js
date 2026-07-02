@@ -44,13 +44,25 @@ export function trackPageView() {
 }
 
 export function trackPurchase(params) {
-  if (typeof window !== 'undefined' && typeof window.fbq === 'function') {
-    window.fbq('track', 'Purchase', params)
-  }
+  if (typeof window === 'undefined' || typeof window.fbq !== 'function') return
+
+  window.fbq('track', 'Purchase', {
+    value: params.value,
+    currency: 'IDR',
+    content_name: params.content_name,
+    content_category: 'Private Meta Ads Mentoring',
+    content_type: 'service',
+    contents: [{ id: params.id, quantity: 1, item_price: params.value }],
+    ...(params.region ? { region: params.region } : {}),
+  })
 }
 
 export function trackLead(params) {
-  if (typeof window !== 'undefined' && typeof window.fbq === 'function') {
-    window.fbq('track', 'Lead', params)
-  }
+  if (typeof window === 'undefined' || typeof window.fbq !== 'function') return
+
+  window.fbq('track', 'Lead', {
+    content_name: params.content_name,
+    content_category: 'Private Meta Ads Mentoring',
+    content_type: 'service',
+  })
 }
